@@ -2,6 +2,7 @@
 const tasks = require('../models/Todo.js')
 
 let Idx = tasks.length + 1;
+const validator = require('validator')
 
 const getTask = (req, res) => {
     try {
@@ -36,18 +37,22 @@ const getTaskById = (req, res) => {
 }
 
 const addTask = (req, res) => {
-    const { title, name, description, dueDate } = req.body;
+    const { First_Name, Last_Name, Email, Phone_no } = req.body;
 
-    if (!title || !name || !description || !dueDate) {
+    if (!First_Name || !Last_Name || !Email || !Phone_no) {
         return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if(!validator.isEmail(Email)){
+        return res.status(404).json({message:"Enter a Valid Email"})
     }
 
     const newTask = {
         id: Idx++,
-        title,
-        name,
-        description,
-        dueDate,
+        First_Name,
+        Last_Name,
+        Email,
+        Phone_no,
     };
 
     tasks.push(newTask);
@@ -60,23 +65,23 @@ const addTask = (req, res) => {
 
 const editTask = (req, res) => {
     const { id } = req.params;
-    const { title, name, description, dueDate } = req.body;
+    const { First_Name, Last_Name, Email, Phone_no } = req.body;
 
     const taskIndex = tasks.findIndex(t => t.id === parseInt(id));
     if (taskIndex === -1) {
         return res.status(404).json({ message: 'Task not found' });
     }
-    if (title) {
-        tasks[taskIndex].title = title;
+    if (First_Name) {
+        tasks[taskIndex].First_name = First_Name;
     }
-    if (name) {
-        tasks[taskIndex].name = name;
+    if (Last_Name) {
+        tasks[taskIndex].Last_Name = Last_Name;
     }
-    if (description) {
-        tasks[taskIndex].description = description;
+    if (Email) {
+        tasks[taskIndex].Email = Email;
     }
-    if (dueDate) {
-        tasks[taskIndex].dueDate = dueDate;
+    if (Phone_no) {
+        tasks[taskIndex].Phone_no = Phone_no;
     }
 
     return res.status(200).json({
